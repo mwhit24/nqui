@@ -18,7 +18,7 @@ Open your terminal and run these commands.
 npm install
 npm run tauri dev
 ```
-# For Linux Users
+### For Linux Users
 
 You may have some dependency issues when running the build.
 For instance, I had to run 
