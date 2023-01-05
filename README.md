@@ -18,3 +18,11 @@ Open your terminal and run these commands.
 npm install
 npm run tauri dev
 ```
+For Linux Users
+
+You may have some dependency issues when running the build.
+For instance, I had to run 
+```sh
+sudo apt update && sudo apt install libwebkit2gtk-4.0-dev
+```
+for the build to be successful
