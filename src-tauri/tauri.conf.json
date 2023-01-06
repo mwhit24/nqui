@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "NQUI",
-    "version": "0.0.0"
+    "version": "0.0.1"
   },
   "tauri": {
     "allowlist": {
@@ -51,6 +51,10 @@
         "timestampUrl": ""
       }
     },
+    "systemTray": {
+      "iconPath": "icons/icon.png",
+      "iconAsTemplate": true
+    },
     "security": {
       "csp": null
     },
@@ -60,6 +64,7 @@
     "windows": [
       {
         "fullscreen": false,
+        "titleBarStyle": "Overlay",
         "height": 400,
         "resizable": true,
         "title": "NQUI",
