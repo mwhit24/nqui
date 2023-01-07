@@ -7,7 +7,7 @@
     "withGlobalTauri": false
   },
   "package": {
-    "productName": "NQUI",
+    "productName": "nqui",
     "version": "0.0.1"
   },
   "tauri": {
@@ -33,7 +33,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "com.tauri.prod",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -67,7 +67,7 @@
         "titleBarStyle": "Overlay",
         "height": 400,
         "resizable": true,
-        "title": "NQUI",
+        "title": "nqui",
         "width": 800
       }
     ]
