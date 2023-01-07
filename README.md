@@ -8,7 +8,6 @@ nqui is a lightweight, performant desktop app, created with Tauri, for exploring
 
 - Connect to an nqlite database and explore without having to run curl requests
 - Run realtime queries
-- Extremely performant due to Rust
 
 ## Getting Started
 
