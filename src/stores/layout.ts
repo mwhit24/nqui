@@ -1,4 +1,4 @@
-import { defineStore } from "pinia";
+import {defineStore} from "pinia";
 
 export const useLayoutStore = defineStore('layout', {
     state: () => ({
@@ -11,7 +11,7 @@ export const useLayoutStore = defineStore('layout', {
         },
         getRightDrawerOpen: (state) => {
             state.rightDrawerOpen;
-        } 
+        }
     },
     actions: {
         setLeftDrawerOpen(value: boolean): void {
