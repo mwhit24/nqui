@@ -16,13 +16,12 @@
 				</div>
 				<!-- Navigation -->
 				<nav class="mt-2 px-3">
-					<div class="mt-2">
+					<div class="mt-1">
 						<!-- Secondary navigation -->
 						<h3 id="desktop-teams-headline" class="px-3 text-base font-normal text-black border-b w-full">Tables</h3>
 						<div aria-labelledby="desktop-teams-headline" class="mt-1 space-y-1" role="group">
 							<div v-if="tables.length > 0">
-								<div v-for="(table, tableIndex) in tables" :key="tableIndex" class="cursor-pointer group flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900" @click="setCurrentTable(table)">
-										<span :class="[table.bgColorClass, 'w-2.5 h-2.5 mr-4 rounded-full']" aria-hidden="true"  />
+								<div v-for="table in tables" :key="table.name" class="cursor-pointer group flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900 hover:duration-200"  @click="setCurrentTable(table)">
 										<span class="truncate">{{ table.name }}</span>
 								</div>
 							</div>
@@ -50,7 +49,7 @@
 						</div>
 					</div>
 					<div class="sm:ml-4 shadow-sm">
-						<button class="sm:order-0 order-1 ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 sm:ml-0" type="button">Run</button>
+						<button class="sm:order-0 order-1 ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 hover:duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 sm:ml-0" type="button">Run</button>
 					</div>
 				</div>
 				<div v-if="currentTable">
@@ -95,14 +94,7 @@ async function getTables(): Promise<void> {
 	const dbTables: any = JSON.parse(await invoke("get_tables"));
 	console.log(dbTables.results)
 	tables.value = dbTables.results[0].rows;
-	tables.value.forEach((table) => {
-		table.bgColorClass = getRowColor();
-	})
-	console.log(tables.value);
-}
 
-function getRowColor() {
-	const colors = ["bg-indigo-500", "bg-red-500", "bg-yellow-500"];
-	return colors[Math.floor(Math.random()*2) + 1]
+	console.log(tables.value);
 }
 </script>
