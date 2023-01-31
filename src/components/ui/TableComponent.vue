@@ -1,16 +1,7 @@
 <template>
-	<div class="px-4 sm:px-6 lg:px-8">
-		<div class="sm:flex sm:items-center">
-			<div class="sm:flex-auto">
-				<h1 class="text-xl font-semibold text-gray-900">Users</h1>
-				<p class="mt-2 text-sm text-gray-700">A list of all the users in your account including their name, title, email and role.</p>
-			</div>
-			<div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-				<button class="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto" type="button">Add user</button>
-			</div>
-		</div>
-		<div class="mt-8 flex flex-col">
-			<div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+	<div class="px-2 sm:px-10 md:px-2 lg:px-2">
+		<div class="mt-2 flex flex-col">
+			<div class="-my-2 mx-0 overflow-x-auto sm:-mx-6 lg:-mx-8">
 				<div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
 					<div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
 						<table class="min-w-full divide-y divide-gray-300">
@@ -46,9 +37,48 @@
 	</div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+
+import {invoke} from "@tauri-apps/api/tauri";
+import {onMounted, ref} from "vue";
+import type { Ref } from 'vue'
+
+const props = defineProps({
+	table: {
+		type: String,
+		required: true
+	}
+})
+
+const columns: Ref<string[]> = ref([]);
+
+onMounted(() => {
+	if (props.table) {
+		setupTableData();
+	}
+})
+
+async function setupTableData(): Promise<void> {
+	const tableData = JSON.parse(await invoke("fetch_related_table", { tableName: props.table }));
+	if (tableData) {
+		const tableResults = tableData.results[0].rows;
+		for (let row in tableResults) {
+			columns.value.push(tableResults[row]);
+		}
+
+		console.log(columns.value);
+	}
+}
+
+// async function setCurrentTable(table: Record<string, string>): Promise<void> {
+// 	currentTable.value = table.name;
+// 	console.log(table)
+// 	const tableData = JSON.parse(await invoke("fetch_related_table", { tableName: currentTable.value }));
+// 	console.log(tableData)
+// }
 const people = [
 	{ name: 'Lindsay Walton', title: 'Front-end Developer', email: 'lindsay.walton@example.com', role: 'Member' },
+	{ name: 'Lindsay Walton', title: 'Front-end Developer', email: 'lindsay.walton@example.com', role: 'Member' }
 	// More people...
 ]
 </script>

@@ -14,38 +14,24 @@ enum Error {
     Io(#[from] std::io::Error),
 }
 
-// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-#[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
-}
-
 #[tauri::command]
 async fn get_tables() -> Result<String, Error> {
     let connection_string = "http://localhost:4001/db/query";
     let query = "SELECT name FROM sqlite_schema WHERE type = 'table' AND name NOT LIKE 'sqlite_%'";
-
     let client = reqwest::Client::new();
-
     let url = Url::parse_with_params(connection_string, &[("q", query)]).unwrap();
-
     let response = client.get(url).send().await.unwrap();
-
     Ok(response.text().await.unwrap())
+}
 
-    // // If we just parse from a string, we can dynamically cast any stringified json object into json, since the db will be dynamic
-    // match response.status() {
-    //     reqwest::StatusCode::OK => {
-    //         let res: Value = serde_json::from_str(&response.text().await?)?;
-    //         Ok(res)?;
-    //     },
-    //     reqwest::StatusCode::UNAUTHORIZED => {
-    //         panic!("Error: Unauthorized!",);
-    //     },
-    //     e => {
-    //         panic!("Uh oh! Something unexpected happened, {}", e);
-    //     }
-    // }
+#[tauri::command]
+async fn fetch_related_table(table_name: &str) -> Result<String, Error> {
+    let connection_string = "http://localhost:4001/db/query";
+    let query = format!("SELECT * FROM {}", table_name);
+    let client = reqwest::Client::new();
+    let url = Url::parse_with_params(connection_string, &[("q", query)]).unwrap();
+    let response = client.get(url).send().await.unwrap();
+    Ok(response.text().await.unwrap())
 }
 
 // we must manually implement serde::Serialize
@@ -64,24 +50,18 @@ fn main() {
     tauri::Builder::default()
         .system_tray(system_tray)
         .menu(menu)
-        .invoke_handler(tauri::generate_handler![get_tables])
+        .invoke_handler(tauri::generate_handler![get_tables, fetch_related_table])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
-    // let menu = construct_menu();
-    // tauri::Builder::default()
-    //     .menu(menu)
-    //     .invoke_handler(tauri::generate_handler![greet])
-    //     .run(tauri::generate_context!())
-    //     .expect("error while running tauri application");
 }
 
 fn create_menu() -> Menu {
     let quit = CustomMenuItem::new("quit".to_string(), "Exit");
     let submenu = Submenu::new("File", Menu::new().add_item(quit));
-    let menu = Menu::new()
+
+    Menu::new()
         .add_submenu(submenu)
-        .add_item(CustomMenuItem::new("view", "View"));
-    return menu;
+        .add_item(CustomMenuItem::new("view", "View"))
 }
 
 fn create_system_tray_menu() -> SystemTray {
@@ -91,6 +71,6 @@ fn create_system_tray_menu() -> SystemTray {
         .add_item(quit)
         .add_native_item(SystemTrayMenuItem::Separator)
         .add_item(hide);
-    let tray = SystemTray::new().with_menu(tray_menu);
-    return tray;
+
+    SystemTray::new().with_menu(tray_menu)
 }

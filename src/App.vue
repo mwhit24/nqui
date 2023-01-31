@@ -1,8 +1,8 @@
 <template>
-	<Layout/>
+	 <Layout/>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import Layout from './components/ui/Layout.vue';
 </script>
 
