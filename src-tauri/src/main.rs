@@ -7,7 +7,6 @@ use tauri::{CustomMenuItem, Menu, Submenu, SystemTray};
 use tauri::{SystemTrayMenu, SystemTrayMenuItem};
 
 fn main() {
-    // Go ahead and setup the data we need
     let system_tray = create_system_tray_menu();
     let menu = create_menu();
     tauri::Builder::default()

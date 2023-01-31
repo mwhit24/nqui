@@ -79,7 +79,7 @@ import Table from "./TableComponent.vue";1
 
 
 const tables: Ref<Record<string, string>[]> = ref([]);
-const currentTable = ref("");
+const currentTable: Ref<string> = ref("");
 
 onMounted(async () => {
 	// Grab list of tables
@@ -87,7 +87,7 @@ await getTables();
 })
 
 async function setCurrentTable(table: Record<string, string>): Promise<void> {
-	currentTable.value = table.name;
+	currentTable.value = tables.value.find(x => x.name === table.name)?.name as string;
 }
 
 async function getTables(): Promise<void> {

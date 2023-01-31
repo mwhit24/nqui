@@ -1,40 +1,32 @@
 <template>
-	<div class="px-2 sm:px-10 md:px-2 lg:px-2">
-		<div class="mt-2 flex flex-col">
-			<div class="-my-2 mx-0 overflow-x-auto sm:-mx-6 lg:-mx-8">
-				<div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-					<div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-						<table class="min-w-full divide-y divide-gray-300">
-							<thead class="bg-gray-50">
-							<tr>
-								<th class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6" scope="col">Name</th>
-								<th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" scope="col">Title</th>
-								<th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" scope="col">Email</th>
-								<th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" scope="col">Role</th>
-								<th class="relative py-3.5 pl-3 pr-4 sm:pr-6" scope="col">
-									<span class="sr-only">Edit</span>
-								</th>
-							</tr>
-							</thead>
-							<tbody class="bg-white">
-							<tr v-for="(person, personIdx) in people" :key="person.email" :class="personIdx % 2 === 0 ? undefined : 'bg-gray-50'">
-								<td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{{ person.name }}</td>
-								<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ person.title }}</td>
-								<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ person.email }}</td>
-								<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ person.role }}</td>
-								<td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-									<a class="text-indigo-600 hover:text-indigo-900" href="#"
-									>Edit<span class="sr-only">, {{ person.name }}</span></a
-									>
-								</td>
-							</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="p-2">
+        <table class="w-full divide-y divide-gray-300">
+        <thead class="bg-red-500 flex w-full">
+            <div class="w-full flex">  
+                <tr v-for="column in columns">
+                <th class="py-3.5 pl-4 pr-3 text-sm font-semibold text-gray-900 sm:pl-6" scope="row">{{ column }}</th>
+        
+                <!-- <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" scope="col">Title</th>
+                <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" scope="col">Email</th>
+                <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" scope="col">Role</th>
+                <th class="relative py-3.5 pl-3 pr-4 sm:pr-6" scope="col">
+                    <span class="sr-only">Edit</span>
+                </th> -->
+                </tr>  
+            </div>
+        </thead>
+        <tbody class="bg-white w-full">
+        <tr v-for="row in rows" :key="row.id">
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ row[columns[0]] }}</td>
+            <td class="px-3 py-4 text-sm text-gray-500">{{ row[columns[1]] }}</td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{row.age }}</td>
+            
+        </tr>
+        </tbody>
+    </table>
+    </div>
+   
+	
 </template>
 
 <script lang="ts" setup>
@@ -51,9 +43,11 @@ const props = defineProps({
 })
 
 const columns: Ref<string[]> = ref([]);
+const rows: Ref<Record<string, string>[]> = ref([]);
 
 onMounted(() => {
 	if (props.table) {
+        console.log(props.table)
 		setupTableData();
 	}
 })
@@ -61,9 +55,12 @@ onMounted(() => {
 async function setupTableData(): Promise<void> {
 	const tableData = JSON.parse(await invoke("fetch_related_table", { tableName: props.table }));
 	if (tableData) {
+        console.log(`table`, tableData)
 		const tableResults = tableData.results[0].rows;
-		for (let row in tableResults) {
-			columns.value.push(tableResults[row]);
+        rows.value = tableResults;
+		for (let row of tableResults) {
+            const columnNames = Object.keys(row);
+            columns.value = columnNames;
 		}
 
 		console.log(columns.value);
