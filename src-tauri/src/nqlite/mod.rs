@@ -20,6 +20,19 @@ impl serde::Serialize for Error {
 }
 
 #[tauri::command]
+pub async fn run_query(query: &str) -> Result<String, Error> {
+    let config = config::Config::default();
+    let mut connection_string = config.connection_string.unwrap().unwrap();
+    {
+        connection_string += "/db/query";
+    }
+    let client = reqwest::Client::new();
+    let url = Url::parse_with_params(&connection_string, &[("q", query)]).unwrap();
+    let response = client.get(url).send().await.unwrap();
+    Ok(response.text().await.unwrap())
+}
+
+#[tauri::command]
 pub async fn get_tables() -> Result<String, Error> {
     let config = config::Config::default();
     let mut connection_string = config.connection_string.unwrap().unwrap();

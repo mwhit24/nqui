@@ -1,6 +1,6 @@
 #![cfg_attr(
-    all(not(debug_assertions), target_os = "windows"),
-    windows_subsystem = "windows"
+all(not(debug_assertions), target_os = "windows"),
+windows_subsystem = "windows"
 )]
 
 use tauri::{CustomMenuItem, Menu, Submenu, SystemTray};
@@ -14,7 +14,8 @@ fn main() {
         .menu(menu)
         .invoke_handler(tauri::generate_handler![
             nqui::nqlite::get_tables,
-            nqui::nqlite::fetch_related_table
+            nqui::nqlite::fetch_related_table,
+            nqui::nqlite::run_query
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

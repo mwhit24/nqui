@@ -1,24 +1,35 @@
 import {defineStore} from "pinia";
 
+export type Tab = {
+    title: string;
+    table: Record<string, string>;
+}
+
 export const useLayoutStore = defineStore('layout', {
     state: () => ({
-        leftDrawerOpen: false,
-        rightDrawerOpen: false,
+        currentTable: {} as Record<string, string>,
+        tabs: [] as Tab[],
     }),
     getters: {
-        getLeftDrawerOpen: (state) => {
-            state.leftDrawerOpen
+        getCurrentTable: (state) => {
+            state.currentTable
         },
-        getRightDrawerOpen: (state) => {
-            state.rightDrawerOpen;
+        getTabs: (state) => {
+            state.tabs
         }
     },
     actions: {
-        setLeftDrawerOpen(value: boolean): void {
-            this.leftDrawerOpen = value;
+        removeTab(tabIndex: number): void {
+            this.tabs.splice(tabIndex, 1)
         },
-        setRightDrawerOpen(value: boolean): void {
-            this.rightDrawerOpen = value;
+        setCurrentTable(table: Record<string, string>): void {
+            this.currentTable = table;
+        },
+        updateTabs(tab: Tab): void {
+            const tabExists = !!this.tabs.find(x => x.title === tab.title);
+            if (!tabExists) {
+                this.tabs.push(tab);
+            }
         }
     }
 })
